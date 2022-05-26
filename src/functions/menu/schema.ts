@@ -1,7 +1,8 @@
 export default {
     type: "object",
     properties: {
-        menu: { type: 'string' }
+        menu: { type: 'string' },
+        text: { type: 'string' }
     },
-    required: ['menu']
+    required: ['menu', 'text']
 } as const;
