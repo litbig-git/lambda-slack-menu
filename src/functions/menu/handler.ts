@@ -6,73 +6,50 @@ import 'reflect-metadata'
 import { createConnection } from 'typeorm'
 import connectionOptions from '@configs/ormconfig'
 import { MenuRepository } from "@repository/menu-repository"
-import { Menu } from '@entity/menu'
-import { WebClient } from '@slack/web-api'
+import { Block } from './block'
+import { getDbDate, getDisplayDate } from '@utils/util'
 
-function padTo2Digits(num: number) {
-    return num.toString().padStart(2, '0')
-}
-
-// 👇️ format as "YYYYMMDD"
-// You can tweak formatting easily
-function formatDate(date: Date, isTomorrow: boolean = false) {
-    return (
-        [
-            date.getFullYear(),
-            padTo2Digits(date.getMonth() + 1),
-            padTo2Digits(date.getDate() + (isTomorrow ? 1 : 0)),
-        ].join('')
-    )
-}
-
-const slack = new WebClient(process.env.SLACK_BOT_TOKEN)
+const today = [ 'today', '오늘' ]
+const tomorrow = ['tomorrow', '내일']
 
 const handler: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
-    let menu: Menu
+    let when = event.body.menu
+    let date = new Date()
+    
+    today.forEach(it => {
+        if (when.includes(it)) {
+            when = when.replaceAll(it, '').trim()
+            return
+        }
+    })
 
-    const when = event.body.menu
-    console.log(`when: ${when}`)
-    let date = formatDate(new Date())
+    tomorrow.forEach(it => {
+        if (when.includes(it)) {
+            when = when.replaceAll(it, '').trim()
+            date.setDate(date.getDate() + 1)
+            return
+        }
+    })
 
-    switch (when) {
-        case '내일':
-        case 'tomorrow':
-            date = formatDate(new Date(), true)
-            break
-        case '오늘':
-        case 'today':
-        default:
-            break
+    if (when.length == 0) {
+        when = 'today'
     }
 
-    console.log(`date: ${date}`)
+    console.log(`when: '${when}', date: ${getDbDate(date)}`)
 
-    try {
-        createConnection(connectionOptions)
-            .then(async connection => {
-                console.log('connected')
-                const repository = connection.getCustomRepository(MenuRepository)
-                menu = await repository.getMenuByDate(date)
-                console.log(menu)
-                await slack.chat.postMessage(
-                    {
-                        channel: '#개발-slack-bot',
-                        text: menu.breakfast
+    const connection = await createConnection(connectionOptions)
+    const repository = connection.getCustomRepository(MenuRepository)
+    const menu = await repository.getMenuByDate(getDbDate(date))
+    console.log(menu)
 
-                    }
-                )
-            }).catch(error => {
-                console.log(error)
-            })
+    const block = new Block(menu)
 
-    } catch (error) {
-        console.log(error)
-    } finally {
-        return formatJSONResponse({
-            statusCode: 200,
-            event,
-        });
-    }
+    return formatJSONResponse({
+        // statusCode: 200,
+        // response_type: 'in_channel',
+        blocks: block.getJson(when, getDisplayDate(date)),
+        // event
+    });
 }
 
 export const main = middyfy(handler)

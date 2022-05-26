@@ -6,7 +6,8 @@
       "@libs/*": ["src/libs/*"],
       "@entity/*": ["src/entity/*"],
       "@repository/*": ["src/repository/*"],
-      "@configs/*": ["src/configs/*"]
+      "@configs/*": ["src/configs/*"],
+      "@utils/*": ["src/utils/*"]
     }
   }
 }
