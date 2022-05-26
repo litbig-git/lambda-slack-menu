@@ -1,13 +1,14 @@
 import type { AWS } from '@serverless/typescript';
 
-import hello from '@functions/hello';
+import menu from '@functions/menu';
 
 const serverlessConfiguration: AWS = {
   service: 'lambda-slack-menu',
   frameworkVersion: '3',
   plugins: [
     'serverless-esbuild',
-    'serverless-offline'
+    'serverless-offline',
+    'serverless-dotenv-plugin'
   ],
   provider: {
     name: 'aws',
@@ -22,7 +23,7 @@ const serverlessConfiguration: AWS = {
     },
   },
   // import the function via paths
-  functions: { hello },
+  functions: { menu },
   package: { individually: true },
   custom: {
     esbuild: {
