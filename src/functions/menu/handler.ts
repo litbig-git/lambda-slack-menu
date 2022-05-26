@@ -45,10 +45,9 @@ const handler: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event)
     const block = new Block(menu)
 
     return formatJSONResponse({
-        // statusCode: 200,
-        // response_type: 'in_channel',
-        blocks: block.getJson(when, getDisplayDate(date)),
-        // event
+        statusCode: 200,
+        response_type: 'in_channel',
+        blocks: block.getJson(when, getDisplayDate(date))
     });
 }
 
