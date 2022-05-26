@@ -60,7 +60,7 @@ export class Block {
 
     getJson(when: string, date: string, isHeader: boolean = true) {
         let jsonArray = new Array()
-        if (this.menu == undefined) {
+        if (this.menu == undefined || when == null) {
             jsonArray.push(...header('메뉴가 없어요 :(', date))
             return JSON.stringify(jsonArray)
         }
@@ -80,7 +80,7 @@ export class Block {
             case '점심':
                 jsonArray.push(divider())
                 jsonArray.push(...menu('spaghetti', '점심 A코너', this.menu.lunch_a))
-                jsonArray.push(...menu('rice', '점심 A코너', this.menu.lunch_b))
+                jsonArray.push(...menu('rice', '점심 B코너', this.menu.lunch_b))
                 jsonArray.push(...menu('leafy_green', '김치&샐러드', this.menu.lunch_side))
                 jsonArray.push(...menu('green_salad', 'SALAD BOX', this.menu.lunch_salad))
                 break
