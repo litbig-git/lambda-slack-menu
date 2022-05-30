@@ -7,10 +7,7 @@ import { createConnection } from 'typeorm'
 import connectionOptions from '@configs/ormconfig'
 import { MenuRepository } from "@repository/menu-repository"
 import { Block } from './block'
-import { getDbDate, getDisplayDate } from '@utils/util'
-
-const today = ['today', '오늘']
-const tomorrow = ['tomorrow', '내일']
+import { getDbDate, getDisplayDate, wordReplace } from '@utils/util'
 
 const connection = createConnection(connectionOptions)
 
@@ -37,26 +34,12 @@ const handler: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event)
             }
         }
 
-        today.forEach(it => {
-            if (when.includes(it)) {
-                when = when.replace(it, '')
-                return
-            }
-        })
-
-        tomorrow.forEach(it => {
-            if (when.includes(it)) {
-                when = when.replace(it, '')
-                date.setDate(date.getDate() + 1)
-                return
-            }
-        })
-
-        when = when.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/^\s+$]/gim, '')
-
-        if (when.length == 0) {
-            when = 'today'
+        let isTomorrow: boolean
+        [when, isTomorrow] = wordReplace(when)
+        if (isTomorrow) {
+            date.setDate(date.getDate() + 1)
         }
+
     } catch (error) {
         console.error(error)
         when = null

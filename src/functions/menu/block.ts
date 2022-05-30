@@ -71,13 +71,11 @@ export class Block {
 
         switch (when) {
             case 'breakfast':
-            case '아침':
                 jsonArray.push(divider())
                 jsonArray.push(...menu('bread', '아침', this.menu.breakfast))
                 break
 
             case 'lunch':
-            case '점심':
                 jsonArray.push(divider())
                 jsonArray.push(...menu('spaghetti', '점심 A코너', this.menu.lunch_a))
                 jsonArray.push(...menu('rice', '점심 B코너', this.menu.lunch_b))
@@ -86,13 +84,11 @@ export class Block {
                 break
 
             case 'dinner':
-            case '저녁':
                 jsonArray.push(divider())
                 jsonArray.push(...menu('beer', '저녁', this.menu.dinner))
                 break
 
             case 'today':
-            case '오늘':
                 jsonArray.push(...this.getJson('breakfast', date, false))
                 jsonArray.push(...this.getJson('lunch', date, false))
                 jsonArray.push(...this.getJson('dinner', date, false))
