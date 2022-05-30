@@ -2,11 +2,39 @@ export function toComma(content: string) {
     return content.replace(/\r?\n|\r/g, ', ')
 }
 
+type DateType = Date | string | number
+
+const zero = (value: number | string) => value.toString().length === 1 ? `0${value}` : value;
+
+const dateFormater = (format: string, date: DateType = Date.now()): string => {
+    const _date = new Date(date) // Date 객체로 만들어줍니다.
+    return format.replace(/(yyyy|mm|dd|MM|DD|H|i|s)/g, (t: string): any => {
+        switch (t) {
+            case "yyyy":
+                return _date.getFullYear()
+            case "mm":
+                return _date.getMonth() + 1
+            case "dd":
+                return _date.getDate()
+            case "MM":
+                return zero(_date.getMonth() + 1)
+            case "DD":
+                return zero(_date.getDate())
+            case "H":
+                return zero(_date.getHours())
+            case "i":
+                return zero(_date.getMinutes())
+            case "s":
+                return zero(_date.getSeconds())
+            default:
+                return ""
+        }
+    })
+}
+
 // format as "YYYYMMDD"
 export function getDbDate(date: Date): string {
-    return date.toLocaleDateString('ko-KR', {
-        day: '2-digit', month: '2-digit', year: 'numeric'
-    }).replace(/[.|\s]/g, '').trim()
+    return dateFormater('yyyyMMDD', date)
 }
 
 // format as "MMM DD, YYYY"
@@ -14,6 +42,11 @@ export function getDisplayDate(date: Date): string {
     return date.toLocaleDateString('en-US', {
         day: 'numeric', month: 'long', year: 'numeric'
     })
+}
+
+// format as "YYYY-MM-DD HH:mm:ss"
+export function getDateTimeStamp(date: Date): string {
+    return dateFormater('yyyy-MM-DD H:i:s', date)
 }
 
 const today = ['today', '오늘', '금일']
@@ -60,7 +93,7 @@ export function wordReplace(word: string) {
         }
     })
 
-    word = word.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/^\s+$]/gim, '')
+    word = word.replace(/[`~!@#$%^&*()_|+\-=?:'",.<>\{\}\[\]\\\/^\s+$]/gim, '')
 
     if (word.length == 0) {
         word = 'today'
