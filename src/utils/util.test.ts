@@ -6,11 +6,11 @@ test('toComma', () => {
 })
 
 test('getDbDate', () => {
-  expect(getDbDate(new Date()))
+  expect(getDbDate(new Date('2022-05-27')))
     .toBe('20220527')
 })
 
 test('getDisplayDate', () => {
-  expect(getDisplayDate(new Date()))
+  expect(getDisplayDate(new Date('2022-05-27')))
     .toBe('May 27, 2022')
 })
