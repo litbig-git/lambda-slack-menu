@@ -27,7 +27,7 @@ const handler: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event)
         } else if (event.hasOwnProperty('body')) {
             `${event.body}`.split('&').forEach(value => {
                 let keyValue = value.split('=')
-                bodyMap.set(keyValue[0], decodeURI(keyValue[1]))
+                bodyMap.set(keyValue[0], decodeURIComponent(keyValue[1]))
             })
             if (bodyMap.has('text')) {
                 when = bodyMap.get('text')
