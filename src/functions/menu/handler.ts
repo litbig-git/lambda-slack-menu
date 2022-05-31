@@ -41,6 +41,7 @@ const handler: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event)
         if (isTomorrow) {
             date.setDate(date.getDate() + 1)
         }
+        console.log(date)
 
     } catch (error) {
         console.error(error)

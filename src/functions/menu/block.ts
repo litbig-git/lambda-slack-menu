@@ -44,7 +44,7 @@ function menu(icon: string, when: string, content: string = null) {
                 type: 'section',
                 text: {
                     type: 'mrkdwn',
-                    text: `${content}`
+                    text: `${content.length > 0 ? content : '없음'}`
                 }
             }
         )
