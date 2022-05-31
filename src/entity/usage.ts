@@ -4,8 +4,8 @@ import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 @Entity('table_usage')
 export class Usage extends BaseEntity {
 
-    parseMap(map: Map<string, string>) {
-        this.datetime = getDateTimeStamp(new Date())
+    parseMap(date: Date, map: Map<string, string>) {
+        this.datetime = getDateTimeStamp(date)
         this.token = map.get('token')
         this.team_id = map.get('team_id')
         this.team_domain = map.get('team_domain')

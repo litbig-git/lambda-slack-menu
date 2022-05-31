@@ -54,7 +54,7 @@ const handler: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event)
     console.log(menu)
 
     const usageRepository = (await connection).getCustomRepository(UsageRepository)
-    await usageRepository.setLog(new Usage().parseMap(bodyMap))
+    await usageRepository.setLog(new Usage().parseMap(date, bodyMap))
 
     const block = new Block(menu)
 
