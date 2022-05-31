@@ -1,5 +1,6 @@
 import { ConnectionOptions } from 'typeorm'
 import { Menu } from '@entity/menu'
+import { Usage } from '@entity/usage';
 
 const ormconfig: ConnectionOptions = {
     type: "mysql",
@@ -11,7 +12,7 @@ const ormconfig: ConnectionOptions = {
     synchronize: true,
     logging: false,
     entities: [
-        Menu
+        Menu, Usage
     ],
     migrations: [
         "src/migration/**/*.ts"

@@ -8,6 +8,8 @@ import connectionOptions from '@configs/ormconfig'
 import { MenuRepository } from "@repository/menu-repository"
 import { Block } from './block'
 import { getDbDate, getDisplayDate, wordReplace } from '@utils/util'
+import { UsageRepository } from '@repository/usage-repository'
+import { Usage } from '@entity/usage'
 
 const connection = createConnection(connectionOptions)
 
@@ -47,9 +49,12 @@ const handler: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event)
 
     console.log(`when: ${when}, date: ${getDbDate(date)}`)
 
-    const repository = (await connection).getCustomRepository(MenuRepository)
-    const menu = await repository.getMenuByDate(getDbDate(date))
+    const menuRepository = (await connection).getCustomRepository(MenuRepository)
+    const menu = await menuRepository.getMenuByDate(getDbDate(date))
     console.log(menu)
+
+    const usageRepository = (await connection).getCustomRepository(UsageRepository)
+    await usageRepository.setLog(new Usage().parseMap(bodyMap))
 
     const block = new Block(menu)
 
