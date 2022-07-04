@@ -1,0 +1,59 @@
+service: lambda-slack-menu
+
+frameworkVersion: "^3.3.0"
+
+plugins:
+  - serverless-esbuild
+  - serverless-dotenv-plugin
+  - serverless-offline
+  - serverless-deployment-bucket
+custom:
+  stage: ${opt:stage, "prod"}
+  prune:
+    automatic: true
+    number: 20
+  dotenv:
+    path: .env
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  stage: ${self:custom.stage}
+  region: ap-northeast-2
+  deploymentBucket:
+    name: lambda-slack-menu-prod
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - lambda:*
+        - iam:*
+      Resource: "*"
+
+package:
+  patterns:
+    - 'resources/**'
+    - '!./*yml'
+    - '!.vscode/**'
+    - '!.gitignore'
+    - '!.git/**'
+    - '!tsconfig*'
+    - '!tslint.json'
+    - '!yarn.lock'
+    - '!.serverless/**'
+    - '!Dockerfile*'
+    - '!./docs/**'
+    - '!./build/**'
+    - '!./test/**'
+    - '!./ci/**'
+    - '!node_modules/serverless*'
+  excludeDevDependencies: true
+
+functions:
+  menu:
+    name: menu
+    handler: src/functions/menu/handler.main
+    timeout: 30
+    events:
+      - http:
+          path: menu
+          method: post
