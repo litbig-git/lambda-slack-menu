@@ -36,12 +36,15 @@ const handler: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event)
             }
         }
 
+        const usageRepository = (await connection).getCustomRepository(UsageRepository)
+        await usageRepository.setLog(new Usage().parseMap(date, bodyMap))
+
         let isTomorrow: boolean
         [when, isTomorrow] = wordReplace(when)
         if (isTomorrow) {
             date.setDate(date.getDate() + 1)
         }
-        console.log(date)
+        console.log(`date: ${date}`)
 
     } catch (error) {
         console.error(error)
@@ -53,9 +56,6 @@ const handler: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event)
     const menuRepository = (await connection).getCustomRepository(MenuRepository)
     const menu = await menuRepository.getMenuByDate(getDbDate(date))
     console.log(menu)
-
-    const usageRepository = (await connection).getCustomRepository(UsageRepository)
-    await usageRepository.setLog(new Usage().parseMap(date, bodyMap))
 
     const block = new Block(menu)
 
