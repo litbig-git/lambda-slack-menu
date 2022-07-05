@@ -26,7 +26,6 @@ provider:
     - Effect: Allow
       Action:
         - lambda:*
-        - iam:*
       Resource: "*"
 
 package:
@@ -50,7 +49,7 @@ package:
 
 functions:
   menu:
-    name: menu
+    name: slack-menu
     handler: src/functions/menu/handler.main
     timeout: 30
     events:
