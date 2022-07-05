@@ -4,7 +4,7 @@ import { Usage } from '@entity/usage';
 
 const ormconfig: ConnectionOptions = {
     type: "mysql",
-    host: "database-mysql.chypan0rbkuk.ap-northeast-2.rds.amazonaws.com",
+    host: "slack-menu-bot-mysql.cuxm8ahfs8s9.ap-northeast-2.rds.amazonaws.com",
     port: 3306,
     username: process.env.DB_USER,
     password: process.env.DB_PASSWD,
