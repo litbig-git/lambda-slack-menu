@@ -14,6 +14,16 @@ custom:
     number: 20
   dotenv:
     path: .env
+  capacities:
+    - table: MenuTable  # DynamoDB Resource
+      read:
+        minimum: 1        # Minimum read capacity
+        maximum: 1000     # Maximum read capacity
+        usage: 0.75       # Targeted usage percentage
+      write:
+        minimum: 1       # Minimum write capacity
+        maximum: 200      # Maximum write capacity
+        usage: 0.5        # Targeted usage percentage
 
 provider:
   name: aws
@@ -26,6 +36,7 @@ provider:
     - Effect: Allow
       Action:
         - lambda:*
+        - dynamodb:*
       Resource: "*"
 
 package:
@@ -56,3 +67,32 @@ functions:
       - http:
           path: menu
           method: post
+  dynamodb-sample:
+    name: dynamodb-sample
+    handler: src/functions/dynamodb-sample/index.handler
+    timeout: 30
+    events:
+      - http:
+          path: dynamodb-sample
+          method: post
+
+resources:
+  Resources:
+    # Dynamodb Table 생성
+    MenuTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: MenuTable
+        AttributeDefinitions:
+          - AttributeName: menuDate
+            AttributeType: S
+          - AttributeName: menuTime
+            AttributeType: S
+        KeySchema:
+          - AttributeName: menuDate
+            KeyType: HASH
+          - AttributeName: menuTime
+            KeyType: RANGE
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
