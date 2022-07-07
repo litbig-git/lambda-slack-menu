@@ -1,3 +1,10 @@
+export const dateKorean = (): Date => {
+    const now = new Date(); // 현재 시간
+    const utcNow = now.getTime() + (now.getTimezoneOffset() * 60 * 1000); // 현재 시간을 utc로 변환한 밀리세컨드값
+    const koreaTimeDiff = 9 * 60 * 60 * 1000; // 한국 시간은 UTC보다 9시간 빠름(9시간의 밀리세컨드 표현)
+    return new Date(utcNow + koreaTimeDiff) // utc로 변환된 값을 한국 시간으로 변환시키기 위해 9시간(밀리세컨드)를 더함
+}
+
 export function toComma(content: string) {
     return content.replace(/\r?\n|\r/g, ', ')
 }
@@ -100,4 +107,16 @@ export function wordReplace(word: string) {
     }
 
     return [word, isTomorrow] as const
+}
+
+export function parseBody(queryString) {
+    let dictionary = {}
+    let parts = queryString.split('&')
+
+    parts.forEach((part) => {
+        let pair = part.split('=')
+        dictionary[pair[0]] = decodeURIComponent(pair[1]).replace(/\+/g, ' ')
+    })
+
+    return dictionary
 }

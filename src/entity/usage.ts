@@ -4,21 +4,21 @@ import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 @Entity('table_usage')
 export class Usage extends BaseEntity {
 
-    parseMap(date: Date, map: Map<string, string>) {
+    parseDict(date: Date, dict) {
         this.datetime = getDateTimeStamp(date)
-        this.token = map.get('token')
-        this.team_id = map.get('team_id')
-        this.team_domain = map.get('team_domain')
-        this.channel_id = map.get('channel_id')
-        this.channel_name = map.get('channel_name')
-        this.user_id = map.get('user_id')
-        this.user_name = map.get('user_name')
-        this.command = map.get('command')
-        this.text = map.get('text')
-        this.api_app_id = map.get('api_app_id')
-        this.is_enterprise_install = map.get('is_enterprise_install')
-        this.response_url = map.get('response_url')
-        this.trigger_id = map.get('trigger_id')
+        this.token = dict['token']
+        this.team_id = dict['team_id']
+        this.team_domain = dict['team_domain']
+        this.channel_id = dict['channel_id']
+        this.channel_name = dict['channel_name']
+        this.user_id = dict['user_id']
+        this.user_name = dict['user_name']
+        this.command = dict['command']
+        this.text = dict['text']
+        this.api_app_id = dict['api_app_id']
+        this.is_enterprise_install = dict['is_enterprise_install']
+        this.response_url = dict['response_url']
+        this.trigger_id = dict['trigger_id']
         return this
     }
 
